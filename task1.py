@@ -21,8 +21,6 @@ CANVAS_W, CANVAS_H = 900, 600
 BACKGROUND = (255, 255, 255)
 PATTERNS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patterns")
 
-# Рекурсия может быть очень глубокой (по одному вызову на каждую серию пикселов),
-# поэтому поднимаем лимит и запускаем заливку в потоке с большим стеком.
 sys.setrecursionlimit(1_000_000)
 
 
@@ -85,8 +83,7 @@ def line_fill(img, x, y, color_at):
             visited[row + px] = 1
         painted += xr - xl + 1
 
-        # 3. Просматриваем строки выше и ниже в пределах [xl, xr];
-        #    для каждой незакрашенной серии рекурсивно вызываем заливку
+
         for ny in (sy - 1, sy + 1):
             if 0 <= ny < h:
                 px = xl
@@ -107,11 +104,7 @@ def fill_with_color(img, x, y, color):
 def fill_with_pattern(img, x, y, pattern, origin=(0, 0)):
     """
     1б. Заливка рисунком.
-
     Точка холста (px, py) берёт пиксел рисунка ((px - ox) mod pw, (py - oy) mod ph).
-    - Небольшой рисунок при этом повторяется циклически (как плитка).
-    - Большой рисунок (не меньше холста) при origin = (0, 0) просто "лежит под холстом"
-      и берётся напрямую, без повторения и масштабирования.
     """
     pp = pattern.load()
     pw, ph = pattern.size
@@ -189,9 +182,8 @@ def trace_border(img, start, border_color):
     return contour
 
 
-# ---------------------------------------------------------------------------
-# Интерфейс вкладки "Задание 1"
-# ---------------------------------------------------------------------------
+# Интерфейс "
+
 
 def rgb_to_hex(c):
     return "#%02x%02x%02x" % c
@@ -224,7 +216,6 @@ class Task1Frame(ttk.Frame):
         self._build_ui()
         self.refresh()
 
-    # ----- построение интерфейса -----
 
     def _build_ui(self):
         panel = ttk.Frame(self, padding=6)
@@ -292,7 +283,7 @@ class Task1Frame(ttk.Frame):
     def set_status(self, text):
         self.status.configure(text=text)
 
-    # ----- отображение -----
+  
 
     def refresh(self, show_contour=False):
         """Выводит изображение на холст; при show_contour - поверх рисуется найденная граница."""
